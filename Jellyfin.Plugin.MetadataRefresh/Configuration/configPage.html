@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Metadata Refresh</title>
+</head>
+
+<body>
+    <div id="metadataRefreshConfigurationPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-button">
+        <div data-role="content">
+            <div class="content-primary">
+                <h1>Metadata Refresh</h1>
+                <form id="metadataRefreshConfigurationForm">
+                    <h2>Intervals</h2>
+                    <div class="inputContainer">
+                        <input is="emby-input" type="number" id="intervalReleasesOfTheDay" required pattern="[0-9]*" min="0" max="24" step="0.1" label="Releases of the day: " />
+                        <div class="fieldDescription">Span of time between refresh in hours for the releases of the day. ⚠️ Setup task trigger accordingly ⚠️</div>
+                    </div>
+                    <div class="inputContainer">
+                        <input is="emby-input" type="number" id="intervalReleasesOfTheWeek" required pattern="[0-9]*" min="0" max="7" step=".1" label="Releases of the week: " />
+                        <div class="fieldDescription">Span of time between refresh in days for the releases of the week.</div>
+                    </div>
+                    <div class="inputContainer">
+                        <input is="emby-input" type="number" id="intervalReleasesOfTheMonth" required pattern="[0-9]*" min="0" max="30" step=".1" label="Releases of the month: " />
+                        <div class="fieldDescription">Span of time between refresh in days for the releases of the month.</div>
+                    </div>
+                    <div class="inputContainer">
+                        <input is="emby-input" type="number" id="intervalReleasesOfTheYear" required pattern="[0-9]*" min="0" max="365" step=".1" label="Releases of the year: " />
+                        <div class="fieldDescription">Span of time between refresh in days for the releases of the year.</div>
+                    </div>
+                    <div class="inputContainer">
+                        <input is="emby-input" type="number" id="maxInterval" required pattern="[0-9]*" min="0" max="1000" step=".1" label="Maximun interval: " />
+                        <div class="fieldDescription">Maximum span of time between refresh in days.</div>
+                    </div>
+                    <div>
+                        <button is="emby-button" type="submit" class="raised button-submit block emby-button">
+                            <span>Save</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script type="text/javascript">
+            var PluginConfig = {
+                pluginUniqueId: '0612a1bb-1c50-4e4d-8bb8-0e5f07fd11f3',
+                intervalReleasesOfTheDay: document.getElementById("intervalReleasesOfTheDay"),
+                intervalReleasesOfTheWeek: document.getElementById("intervalReleasesOfTheWeek"),
+                intervalReleasesOfTheMonth: document.getElementById("intervalReleasesOfTheMonth"),
+                intervalReleasesOfTheYear: document.getElementById("intervalReleasesOfTheYear"),
+                maxInterval: document.getElementById("maxInterval")
+            };
+
+            document.querySelector('#metadataRefreshConfigurationPage')
+                .addEventListener('pageshow', function () {
+                    Dashboard.showLoadingMsg();
+                    ApiClient.getPluginConfiguration(PluginConfig.pluginUniqueId).then(function (config) {
+                        PluginConfig.intervalReleasesOfTheDay.value = config.IntervalReleasesOfTheDay * 24;
+                        PluginConfig.intervalReleasesOfTheWeek.value = config.IntervalReleasesOfTheWeek;
+                        PluginConfig.intervalReleasesOfTheMonth.value = config.IntervalReleasesOfTheMonth;
+                        PluginConfig.intervalReleasesOfTheYear.value = config.IntervalReleasesOfTheYear;
+                        PluginConfig.maxInterval.value = config.MaxInterval;
+                        Dashboard.hideLoadingMsg();
+                    });
+                });
+
+            document.querySelector('#metadataRefreshConfigurationForm')
+                .addEventListener('submit', function (e) {
+                    Dashboard.showLoadingMsg();
+                    ApiClient.getPluginConfiguration(PluginConfig.pluginUniqueId).then(function (config) {
+                        config.IntervalReleasesOfTheDay = PluginConfig.intervalReleasesOfTheDay.value / 24;
+                        config.IntervalReleasesOfTheWeek = PluginConfig.intervalReleasesOfTheWeek.value;
+                        config.IntervalReleasesOfTheMonth = PluginConfig.intervalReleasesOfTheMonth.value;
+                        config.IntervalReleasesOfTheYear = PluginConfig.intervalReleasesOfTheYear.value;
+                        config.MaxInterval = PluginConfig.maxInterval.value;
+                        ApiClient.updatePluginConfiguration(PluginConfig.pluginUniqueId, config).then(function (result) {
+                            Dashboard.processPluginConfigurationUpdateResult(result);
+                        });
+                    });
+
+                    e.preventDefault();
+                    return false;
+                });
+        </script>
+    </div>
+</body>
+
+</html>

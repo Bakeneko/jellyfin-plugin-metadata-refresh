@@ -1,0 +1,15 @@
+---
+name: "Metadata Refresh"
+guid: "0612a1bb-1c50-4e4d-8bb8-0e5f07fd11f3"
+version: "0.0.0.1"
+targetAbi: "10.10.0.0"
+framework: "net8.0"
+owner: "bakeneko"
+overview: "Refresh metadata"
+description: >
+  Refresh content metadata more frequently for recent releases.
+category: "Metadata"
+artifacts:
+  - "Jellyfin.Plugin.MetadataRefresh.dll"
+changelog: |-
+  - First release @bakeneko
