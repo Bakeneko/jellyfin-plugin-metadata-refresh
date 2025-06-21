@@ -1,1 +1,20 @@
-[]
+[
+    {
+        "guid": "0612a1bb-1c50-4e4d-8bb8-0e5f07fd11f3",
+        "name": "Metadata Refresh",
+        "description": "Refresh content metadata more frequently for recent releases.\n",
+        "overview": "Refresh metadata",
+        "owner": "bakeneko",
+        "category": "Metadata",
+        "versions": [
+            {
+                "version": "1.0.0.0",
+                "changelog": "- First release @bakeneko",
+                "targetAbi": "10.10.0.0",
+                "sourceUrl": "https://github.com/Bakeneko/jellyfin-plugin-metadata-refresh/releases/download/v1/metadata-refresh_1.0.0.0.zip",
+                "checksum": "54f3f1ceb0c59c543eb131e9f7ce33ba",
+                "timestamp": "2025-06-21T18:18:27Z"
+            }
+        ]
+    }
+]
