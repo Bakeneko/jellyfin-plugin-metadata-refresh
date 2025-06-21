@@ -10,6 +10,7 @@ jobs:
   call:
     uses: jellyfin/jellyfin-meta-plugins/.github/workflows/bump-version.yaml@master
     with:
+      default-branch: main
       csproj-name: Jellyfin.Plugin.MetadataRefresh
       is-unstable: ${{ github.event.release.prerelease }}
       commiter-name: GitHub Actions
