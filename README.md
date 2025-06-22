@@ -18,3 +18,5 @@ dotnet publish --configuration Release --output bin
 ```
 
 4. Place the resulting `Jellyfin.Plugin.MetadataRefresh.dll` file in a folder called `plugins/` inside your Jellyfin installation / data directory.
+
+Repository: https://raw.githubusercontent.com/bakeneko/jellyfin-plugin-metadata-refresh/main/manifest.json
