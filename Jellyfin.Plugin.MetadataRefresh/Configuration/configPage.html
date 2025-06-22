@@ -7,11 +7,11 @@
 </head>
 
 <body>
-    <div id="metadataRefreshConfigurationPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-button">
+    <div id="configurationPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button">
         <div data-role="content">
             <div class="content-primary">
                 <h1>Metadata Refresh</h1>
-                <form id="metadataRefreshConfigurationForm">
+                <form id="configurationForm">
                     <h2>Intervals</h2>
                     <div class="inputContainer">
                         <input is="emby-input" type="number" id="intervalReleasesOfTheDay" required pattern="[0-9]*" min="0" max="24" step="0.1" label="Releases of the day: " />
@@ -51,7 +51,7 @@
                 maxInterval: document.getElementById("maxInterval")
             };
 
-            document.querySelector('#metadataRefreshConfigurationPage')
+            document.querySelector('#configurationPage')
                 .addEventListener('pageshow', function () {
                     Dashboard.showLoadingMsg();
                     ApiClient.getPluginConfiguration(PluginConfig.pluginUniqueId).then(function (config) {
@@ -64,7 +64,7 @@
                     });
                 });
 
-            document.querySelector('#metadataRefreshConfigurationForm')
+            document.querySelector('#configurationForm')
                 .addEventListener('submit', function (e) {
                     Dashboard.showLoadingMsg();
                     ApiClient.getPluginConfiguration(PluginConfig.pluginUniqueId).then(function (config) {
