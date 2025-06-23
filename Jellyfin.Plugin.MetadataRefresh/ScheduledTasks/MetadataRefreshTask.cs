@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Jellyfin.Data.Enums;
@@ -103,7 +104,7 @@ namespace Jellyfin.Plugin.MetadataRefresh.ScheduledTasks
         {
             return new[]
             {
-                new TaskTriggerInfo { Type = TaskTriggerInfo.TriggerInterval, IntervalTicks = TimeSpan.FromHours(3).Ticks }
+                new TaskTriggerInfo { Type = TaskTriggerInfo.TriggerInterval, IntervalTicks = TimeSpan.FromHours(1).Ticks }
             };
         }
 
@@ -111,7 +112,7 @@ namespace Jellyfin.Plugin.MetadataRefresh.ScheduledTasks
         /// Gets items that need a refresh.
         /// </summary>
         /// <returns>List of items that need a refresh.</returns>
-        private HashSet<BaseItem> GetItemsToRefresh()
+        private List<BaseItem> GetItemsToRefresh()
         {
             HashSet<BaseItem> toRefreshItems = new HashSet<BaseItem>();
 
@@ -127,18 +128,42 @@ namespace Jellyfin.Plugin.MetadataRefresh.ScheduledTasks
 
             DateTime now = DateTime.UtcNow;
 
+            var maxItemNumber = Configuration.MaxItemNumber;
+
+            bool TryAddItems(IEnumerable<BaseItem> items)
+            {
+                toRefreshItems.UnionWith(items);
+                return maxItemNumber > 0 && toRefreshItems.Count >= maxItemNumber;
+            }
+
             // Released less than 1 day ago
-            toRefreshItems.UnionWith(GetItemsToRefresh(itemTypes, now.AddDays(-1), now.AddDays(1), now.AddDays(-Configuration.IntervalReleasesOfTheDay)));
+            if (TryAddItems(GetItemsToRefresh(itemTypes, now.AddDays(-1), now.AddDays(1), now.AddDays(-Configuration.IntervalReleasesOfTheDay))))
+            {
+                return [.. toRefreshItems.Take(maxItemNumber)];
+            }
+
             // Released less than a week ago
-            toRefreshItems.UnionWith(GetItemsToRefresh(itemTypes, now.AddDays(-7), now.AddDays(-1), now.AddDays(-Configuration.IntervalReleasesOfTheWeek)));
+            if (TryAddItems(GetItemsToRefresh(itemTypes, now.AddDays(-7), now.AddDays(-1), now.AddDays(-Configuration.IntervalReleasesOfTheWeek))))
+            {
+                return [.. toRefreshItems.Take(maxItemNumber)];
+            }
+
             // Released less than a month ago
-            toRefreshItems.UnionWith(GetItemsToRefresh(itemTypes, now.AddDays(-30), now.AddDays(-7), now.AddDays(-Configuration.IntervalReleasesOfTheMonth)));
+            if (TryAddItems(GetItemsToRefresh(itemTypes, now.AddDays(-30), now.AddDays(-7), now.AddDays(-Configuration.IntervalReleasesOfTheMonth))))
+            {
+                return [.. toRefreshItems.Take(maxItemNumber)];
+            }
+
             // Released less than a year ago
-            toRefreshItems.UnionWith(GetItemsToRefresh(itemTypes, now.AddDays(-365), now.AddDays(-30), now.AddDays(-Configuration.IntervalReleasesOfTheYear)));
+            if (TryAddItems(GetItemsToRefresh(itemTypes, now.AddDays(-365), now.AddDays(-30), now.AddDays(-Configuration.IntervalReleasesOfTheYear))))
+            {
+                return [.. toRefreshItems.Take(maxItemNumber)];
+            }
+
             // Refresh items reaching max interval
             toRefreshItems.UnionWith(GetItemsToRefresh(itemTypes, null, null, now.AddDays(-Configuration.MaxInterval)));
-
-            return toRefreshItems;
+             
+            return [.. maxItemNumber > 0 ? toRefreshItems.Take(maxItemNumber) : toRefreshItems];
         }
 
         /// <summary>

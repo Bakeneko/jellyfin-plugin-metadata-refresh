@@ -17,6 +17,7 @@ namespace Jellyfin.Plugin.MetadataRefresh.Configuration
             IntervalReleasesOfTheMonth = 7;
             IntervalReleasesOfTheYear = 30;
             MaxInterval = 90;
+            MaxItemNumber = 0;
         }
 
         /// <summary>
@@ -43,5 +44,10 @@ namespace Jellyfin.Plugin.MetadataRefresh.Configuration
         /// Gets or sets the maximum interval between refresh.
         /// </summary>
         public double MaxInterval { get; set; }
+
+        /// <summary>
+        /// Gets or sets the maximum number of items refreshed.
+        /// </summary>
+        public int MaxItemNumber { get; set; }
     }
 }

@@ -33,6 +33,10 @@
                         <input is="emby-input" type="number" id="maxInterval" required pattern="[0-9]*" min="0" max="1000" step=".1" label="Maximun interval: " />
                         <div class="fieldDescription">Maximum span of time between refresh in days.</div>
                     </div>
+                    <div class="inputContainer">
+                        <input is="emby-input" type="number" id="maxItemNumber" required pattern="[0-9]*" min="0" max="10000" step="1" label="Maximun number of items: " />
+                        <div class="fieldDescription">Maximum number of items refreshed by run.</div>
+                    </div>
                     <div>
                         <button is="emby-button" type="submit" class="raised button-submit block emby-button">
                             <span>Save</span>
@@ -48,7 +52,8 @@
                 intervalReleasesOfTheWeek: document.getElementById("intervalReleasesOfTheWeek"),
                 intervalReleasesOfTheMonth: document.getElementById("intervalReleasesOfTheMonth"),
                 intervalReleasesOfTheYear: document.getElementById("intervalReleasesOfTheYear"),
-                maxInterval: document.getElementById("maxInterval")
+                maxInterval: document.getElementById("maxInterval"),
+                maxItemNumber: document.getElementById("maxItemNumber")
             };
 
             document.querySelector('#configurationPage')
@@ -60,6 +65,7 @@
                         PluginConfig.intervalReleasesOfTheMonth.value = config.IntervalReleasesOfTheMonth;
                         PluginConfig.intervalReleasesOfTheYear.value = config.IntervalReleasesOfTheYear;
                         PluginConfig.maxInterval.value = config.MaxInterval;
+                        PluginConfig.maxItemNumber.value = config.MaxItemNumber;
                         Dashboard.hideLoadingMsg();
                     });
                 });
@@ -73,6 +79,7 @@
                         config.IntervalReleasesOfTheMonth = PluginConfig.intervalReleasesOfTheMonth.value;
                         config.IntervalReleasesOfTheYear = PluginConfig.intervalReleasesOfTheYear.value;
                         config.MaxInterval = PluginConfig.maxInterval.value;
+                        config.MaxItemNumber = PluginConfig.maxItemNumber.value;
                         ApiClient.updatePluginConfiguration(PluginConfig.pluginUniqueId, config).then(function (result) {
                             Dashboard.processPluginConfigurationUpdateResult(result);
                         });
