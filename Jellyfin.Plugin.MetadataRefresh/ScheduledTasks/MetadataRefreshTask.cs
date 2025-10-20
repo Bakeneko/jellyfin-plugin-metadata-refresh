@@ -71,7 +71,7 @@ namespace Jellyfin.Plugin.MetadataRefresh.ScheduledTasks
             _logger.LogInformation("Checking for items to refresh");
 
             var toRefreshItems = GetItemsToRefresh();
-            _logger.LogInformation("Found {0} items to refresh.", toRefreshItems.Count);
+            _logger.LogInformation("Found {Count} items to refresh.", toRefreshItems.Count);
             progress.Report(5);
 
             MetadataRefreshOptions refreshOptions = new MetadataRefreshOptions(new DirectoryService(_fileSystem))
@@ -102,10 +102,10 @@ namespace Jellyfin.Plugin.MetadataRefresh.ScheduledTasks
         /// <inheritdoc/>
         public IEnumerable<TaskTriggerInfo> GetDefaultTriggers()
         {
-            return new[]
-            {
-                new TaskTriggerInfo { Type = TaskTriggerInfo.TriggerInterval, IntervalTicks = TimeSpan.FromHours(1).Ticks }
-            };
+            return
+            [
+                new TaskTriggerInfo { Type = TaskTriggerInfoType.IntervalTrigger, IntervalTicks = TimeSpan.FromHours(1).Ticks }
+            ];
         }
 
         /// <summary>
@@ -114,17 +114,17 @@ namespace Jellyfin.Plugin.MetadataRefresh.ScheduledTasks
         /// <returns>List of items that need a refresh.</returns>
         private List<BaseItem> GetItemsToRefresh()
         {
-            HashSet<BaseItem> toRefreshItems = new HashSet<BaseItem>();
+            HashSet<BaseItem> toRefreshItems = [];
 
             // List of types we are interested in
-            BaseItemKind[] itemTypes = new[] {
+            BaseItemKind[] itemTypes = [
                 BaseItemKind.Movie,
                 BaseItemKind.Series,
                 BaseItemKind.Season,
                 BaseItemKind.Episode,
                 BaseItemKind.MusicAlbum,
                 BaseItemKind.MusicVideo,
-            };
+            ];
 
             DateTime now = DateTime.UtcNow;
 
@@ -172,13 +172,15 @@ namespace Jellyfin.Plugin.MetadataRefresh.ScheduledTasks
         /// <returns>List of items that need a refresh.</returns>
         private HashSet<BaseItem> GetItemsToRefresh(BaseItemKind[] itemTypes, DateTime? minPremiere, DateTime? maxPremiere, DateTime maxRefresh)
         {
-            HashSet<BaseItem> toRefreshItems = new HashSet<BaseItem>();
+            HashSet<BaseItem> toRefreshItems = [];
 
-            InternalItemsQuery query = new InternalItemsQuery();
-            query.IncludeItemTypes = itemTypes;
-            query.MaxPremiereDate = maxPremiere;
-            query.MinPremiereDate = minPremiere;
-            List<BaseItem> itemList = _libraryManager.GetItemList(query).FindAll(item => item.DateLastRefreshed <= maxRefresh);
+            InternalItemsQuery query = new InternalItemsQuery
+            {
+                IncludeItemTypes = itemTypes,
+                MaxPremiereDate = maxPremiere,
+                MinPremiereDate = minPremiere
+            };
+            List<BaseItem> itemList = [.. _libraryManager.GetItemList(query).Where(item => item.DateLastRefreshed <= maxRefresh)];
             toRefreshItems.UnionWith(itemList);
 
             return toRefreshItems;

@@ -2,8 +2,8 @@
 name: "Metadata Refresh"
 guid: "0612a1bb-1c50-4e4d-8bb8-0e5f07fd11f3"
 version: 2
-targetAbi: "10.10.0.0"
-framework: "net8.0"
+targetAbi: "10.11.0.0"
+framework: "net9.0"
 owner: "bakeneko"
 overview: "Refresh metadata"
 description: >
@@ -13,4 +13,5 @@ category: "Metadata"
 artifacts:
   - "Jellyfin.Plugin.MetadataRefresh.dll"
 changelog: |-
-  - First release @bakeneko
+  - Implement max item number by run and change task interval to 1h
+  - Update for Jellyfin 10.11.0
