@@ -1,7 +1,7 @@
 ---
 name: "Metadata Refresh"
 guid: "0612a1bb-1c50-4e4d-8bb8-0e5f07fd11f3"
-version: 2
+version: 3
 targetAbi: "10.11.0.0"
 framework: "net9.0"
 owner: "bakeneko"
