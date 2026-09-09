@@ -8,6 +8,14 @@
         "category": "Metadata",
         "versions": [
             {
+                "version": "3.0.0.0",
+                "changelog": "- Update for Jellyfin 12.0.0",
+                "targetAbi": "12.0.0",
+                "sourceUrl": "https://github.com/Bakeneko/jellyfin-plugin-metadata-refresh/releases/download/v3/metadata-refresh_3.0.0.0.zip",
+                "checksum": "84090c3ade3840d1213d8fec4e42e99d",
+                "timestamp": "2026-09-09T12:31:04Z"
+            },
+            {
                 "version": "2.0.0.0",
                 "changelog": "- Implement max item number by run and change task interval to 1h\n- Update for Jellyfin 10.11.0",
                 "targetAbi": "10.11.0.0",
