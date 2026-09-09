@@ -71,7 +71,10 @@ namespace Jellyfin.Plugin.MetadataRefresh.ScheduledTasks
             _logger.LogInformation("Checking for items to refresh");
 
             var toRefreshItems = GetItemsToRefresh();
-            _logger.LogInformation("Found {Count} items to refresh.", toRefreshItems.Count);
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Found {Count} items to refresh.", toRefreshItems.Count);
+            }
             progress.Report(5);
 
             MetadataRefreshOptions refreshOptions = new MetadataRefreshOptions(new DirectoryService(_fileSystem))
@@ -86,7 +89,10 @@ namespace Jellyfin.Plugin.MetadataRefresh.ScheduledTasks
 
             foreach (BaseItem item in toRefreshItems)
             {
-                _logger.LogInformation("Refreshing metadata for item {Id}: {Name} ({Type})", item.Id, item.Name, item.GetBaseItemKind());
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Refreshing metadata for item {Id}: {Name} ({Type})", item.Id, item.Name, item.GetBaseItemKind());
+                }
                 await _providerManager.RefreshSingleItem(
                     item,
                     refreshOptions,
